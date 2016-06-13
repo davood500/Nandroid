@@ -22,6 +22,7 @@ void ns_vm_init(ns_vm* vm);
 void ns_scope_push(ns_vm* vm);
 void ns_scope_pop(ns_vm* vm);
 void ns_scope_define(ns_vm* vm, ns_symbol symbol, ns_value* value);
-void ns_scope_lookup(ns_vm* vm, ns_symbol symbol, ns_value** value);
+
+int ns_scope_lookup(ns_vm* vm, ns_symbol symbol, ns_value** value);
 
 #endif

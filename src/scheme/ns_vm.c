@@ -52,7 +52,7 @@ ns_scope_pop(ns_vm* vm){
   ns_scope_entry* entry = scope->entries;
   while(entry != NULL){
     ns_scope_entry* next = entry->next;
-    ns_gc_del_ref(vm->gc, next->value);
+    ns_gc_del_ref(vm->gc, entry->value);
     free(entry);
     entry = next;
   }
@@ -77,6 +77,7 @@ ns_scope_define(ns_vm* vm, ns_symbol sym, ns_value* value){
   entry->value = value;
   entry->next = vm->scope->entries;
   vm->scope->entries = entry;
+  ns_gc_add_ref(vm->gc, value);
 }
 
 int

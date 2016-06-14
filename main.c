@@ -1,35 +1,27 @@
-#include <nandroid/scheme/ns_gc.h>
+#include <nandroid/web.h>
 #include <stdlib.h>
-#include <stdio.h>
-#include <nandroid/scheme/ns_vm.h>
-#include <nandroid/scheme/ns_object.h>
 
-int
-main(int argc, char** argv){
-  ns_vm vm;
-  ns_vm_init(&vm);
+#define NAN_VERSION \
+  "HTTP/1.1 200 OK\r\n" \
+  "Content-Type: application/json\r\n" \
+  "\r\n" \
+  "{ \"Nandroid Version\": \"0.0.0.0\" }\n"
 
-  ns_value* ten = ns_gc_alloc(vm.gc, sizeof(ns_value));
-  ten->type = kFixnumType;
-  ten->as.ns_fixnum = 10;
-  ns_scope_define(&vm, ns_hash("ten"), ten);
+static void
+handle_api_version(uv_stream_t* stream, void on_uv_write_cb(uv_write_t* write, int status), struct _http_request* request){
+  uv_write_t* write = malloc(sizeof(uv_write_t));
+  uv_buf_t buff = uv_buf_init(NAN_VERSION, sizeof(NAN_VERSION));
+  uv_write(write, stream, &buff, 1, on_uv_write_cb);
+}
 
-  ns_value* lookup = NULL;
-  if(!ns_scope_lookup(&vm, ns_hash("ten"), &lookup)){
-    fprintf(stderr, "Couldn't lookup 'ten'\n");
-    abort();
-  }
+static void
+run_web_panel(){
 
-  switch(lookup->type){
-    case kFixnumType:{
-      printf("%lu\n", ten->as.ns_fixnum);
-      break;
-    }
-    default:{
-      printf("unknown\n");
-      break;
-    }
-  }
+}
 
-  return 0;
+int main(int argc, char** argv){
+  nan_http_server server;
+  nan_http_server_init(&server);
+  nan_http_server_route(&server);
+  nan_http_server_run(&server);
 }

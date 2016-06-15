@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <uv.h>
 #include <http_parser.h>
+#include <sqlite3.h>
 
 typedef struct{
   char* field;
@@ -20,6 +21,7 @@ typedef struct _http_request{
   int headers_length;
   http_header headers[20];
   char* body;
+  sqlite3* database;
 } http_request;
 
 void tcp_connection_new_cb(uv_stream_t* server, int status);

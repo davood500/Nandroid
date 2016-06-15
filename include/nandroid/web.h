@@ -9,6 +9,7 @@
 typedef struct{
   http_router* routers[20];
   uv_loop_t* loop;
+  sqlite3* database;
 } nan_http_server;
 
 void nan_http_server_init(nan_http_server* server);

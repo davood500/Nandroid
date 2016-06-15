@@ -11,10 +11,23 @@ static nan_http_server* nan_server;
 
 static char cwd[1024];
 
+#define DATABASE "/nandroid.sqlite"
+
 void
 nan_http_server_init(nan_http_server* serv){
   getcwd(cwd, 1024);
+  char* database_path = malloc(strlen(cwd) + strlen(DATABASE) + 1);
+  memcpy(database_path, cwd, strlen(cwd));
+  memcpy(database_path + strlen(cwd), DATABASE, strlen(DATABASE));
+  database_path[strlen(cwd) + strlen(DATABASE)] = '\0';
+  if(sqlite3_open(database_path, &serv->database)){
+    fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(serv->database));
+    abort();
+  }
+  free(database_path);
   memcpy(&cwd[strlen(cwd)], "/www\0", 5);
+
+  printf("%s\n", cwd);
 
   for(int i = 0; i < 20; i++){
     serv->routers[i] = NULL;
@@ -61,6 +74,7 @@ tcp_connection_new_cb(uv_stream_t* server, int status){
   req->parser = malloc(sizeof(http_parser));
   req->stream.data = req;
   req->parser->data = req;
+  req->database = nan_server->database;
 
   if(uv_accept(server, &req->stream) == 0){
     http_parser_init(req->parser, HTTP_REQUEST);

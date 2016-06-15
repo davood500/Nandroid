@@ -308,7 +308,6 @@ ns_gc_del_ref(ns_gc* gc, void* ref) {
 }
 
 #ifdef NS_DEBUG
-
 void
 ns_gc_print_minor(ns_gc* gc) {
   printf("*** List of minor heap allocated chunks\n");
@@ -375,5 +374,4 @@ ns_gc_print_refs(ns_gc* gc) {
   }
   printf("*** End of stored references\n");
 }
-
 #endif

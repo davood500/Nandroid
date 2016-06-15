@@ -13,7 +13,6 @@ typedef struct{
 } http_header;
 
 typedef struct _http_request{
-  uv_write_t req;
   uv_stream_t stream;
   http_parser* parser;
   char* url;
@@ -21,7 +20,6 @@ typedef struct _http_request{
   int headers_length;
   http_header headers[20];
   char* body;
-  uv_buf_t buff;
 } http_request;
 
 void tcp_connection_new_cb(uv_stream_t* server, int status);

@@ -7,7 +7,7 @@
 #include "./web/http_router.h"
 
 typedef struct{
-  http_router routers[20];
+  http_router* routers[20];
   uv_loop_t* loop;
 } nan_http_server;
 

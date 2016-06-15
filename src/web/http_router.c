@@ -12,6 +12,10 @@ void
 http_router_init(http_router* router, char* name){
   router->name = strdup(name);
   router->name_length = strlen(name);
+
+  for(int i = 0; i < 20; i++){
+    router->routes[i] = NULL;
+  }
 }
 
 static int
@@ -38,7 +42,7 @@ http_route* http_router_find(http_router* router, char* name){
   }
 
   for(int i = 0; i < 20; i++){
-    http_route* r = &router->routes[i];
+    http_route* r = router->routes[i];
     if(r != NULL){
       if(strncmp(r->name, route, sizeof(route)) == 0){
         free(route);

@@ -19,7 +19,7 @@ typedef struct{
   char* name;
   size_t name_length;
 
-  http_route routes[20];
+  http_route* routes[20];
 } http_router;
 
 void http_router_init(http_router* router, char* name);

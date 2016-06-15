@@ -1,20 +1,31 @@
 #include <nandroid/web.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <nandroid/web/http_router.h>
 
 #define NAN_VERSION \
   "HTTP/1.1 200 OK\r\n" \
   "Content-Type: application/json\r\n" \
   "\r\n" \
-  "{ \"Nandroid Version\": \"0.0.0.0\" }\n"
+  "%s\n"
+
+static char* version = "{ \"version\": \"0.0.0.0\" }";
 
 static void
 handle_api_version(uv_stream_t* stream, struct _http_request* request) {
+  size_t len = (strlen(NAN_VERSION) - 2) + strlen(version);
+  char* response = malloc(len + 1);
+  snprintf(response, len, NAN_VERSION, version);
+  response[len] = '\0';
+
+  uv_buf_t buffer;
+  buffer.base = malloc(strlen(response));
+  buffer.len = strlen(response);
+  strncpy(buffer.base, response, strlen(response));
+
+  free(response);
+
   uv_write_t* write = malloc(sizeof(uv_write_t));
-  uv_buf_t buff = uv_buf_init(NAN_VERSION, sizeof(NAN_VERSION));
-  uv_write(write, stream, &buff, 1, on_uv_write_cb);
+  uv_write(write, stream, &buffer, 1, &on_uv_write_cb);
 }
 
 static void
@@ -25,7 +36,6 @@ setup_api(http_router* router) {
 
   router->routes[0] = version;
 }
-
 
 void
 nan_http_server_route(nan_http_server* server) {

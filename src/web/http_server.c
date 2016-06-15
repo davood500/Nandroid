@@ -14,6 +14,7 @@ static char cwd[1024];
 void
 nan_http_server_init(nan_http_server* serv){
   getcwd(cwd, 1024);
+  memcpy(&cwd[strlen(cwd)], "/www\0", 5);
 
   for(int i = 0; i < 20; i++){
     serv->routers[i] = NULL;

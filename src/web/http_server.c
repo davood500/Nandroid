@@ -327,6 +327,8 @@ http_message_complete_cb(http_parser* parser){
   memcpy(path + strlen(cwd), req->url, strlen(req->url));
   path[strlen(cwd) + strlen(req->url)] = '\0';
 
+  printf("Serving: %s\n", req->url);
+
   if(access(path, F_OK) != -1){
     handle_serve_file(path, &req->stream, req);
   } else{

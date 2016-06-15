@@ -2,8 +2,11 @@
     app.config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $url) {
         $url.otherwise("/login");
         $stateProvider.state("login", {
+            url: "/login",
             templateUrl: "./views/login.html",
-            controller: "loginCtrl"
+            controller: ["$scope", function($scope){
+                $scope.name = "Laceh";
+            }]
         }).state("dashboard", {
             url: "/",
             templateUrl: "./views/dashboard.html",
@@ -48,5 +51,4 @@
             }
         });
     }]);
-
 })(angular.module("nandroid", ["ui.router"]));
